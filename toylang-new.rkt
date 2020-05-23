@@ -94,10 +94,19 @@
        [(list 'quote quoted)
         (cons #f (cons quoted env))]
        [boi
-        (cons #t (cons boi env))]
-       )
-     )
+        (cons #t (cons boi env))]))
    evalu))
+
+(define (add-eval evalu)
+  (decor-full
+   (lambda (evalu2 expr env)
+     (match expr
+       [(list 'eval to-eval-expr)
+        (let ([to-eval (car (evalu2 evalu2 to-eval-expr env))])
+          (cons #f (evalu2 evalu2 to-eval env)))]
+       [boi
+        (cons #t (cons boi env))]))
+  evalu))
 
 (define (eval-all evalu env result . exprs)
   (if (empty? exprs)
@@ -109,5 +118,15 @@
 
 (define (basic-eval-all env result . exprs)
   (apply eval-all (cons basic-eval (cons env (cons result exprs)))))
+
+(define my-eval
+  (add-nums
+   (add-bools
+    (add-quote
+     (add-eval
+      basic-eval)))))
+
+(define (my-eval-all env result . exprs)
+  (apply eval-all (cons my-eval (cons env (cons result exprs)))))
 
 (define empty-env (hash))
