@@ -14,7 +14,7 @@
           (hash-ref env x)
           (error (string-append "Variable not declared: " (symbol->string x))))
       env)]
-    [`(lambda ,symblist ,body)
+    [`((or lambda λ) ,symblist ,body)
      #:when (and (list? symblist) ((all? symbol?) symblist))
      (cons (lambda (args)
              (if (= (length args) (length symblist))
@@ -29,7 +29,7 @@
                    (number->string (length args))
                    " but " (number->string (length symblist)) " were expected"))))
              env)]
-    [`(lambda ,x ,body)
+    [`((or lambda λ) ,x ,body)
      #:when (symbol? x)
      (cons (lambda (args)
              (car (evalu evalu body
