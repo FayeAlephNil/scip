@@ -98,3 +98,13 @@
 ; (pascal 2 1) ==> 2
 ; (pascal 4 3) ==> 4
 ; (pascal 4 2) ==> 6
+
+
+(define (fast-expt-iter-go b n a)
+  (cond
+   ((= n 0) a)
+   ((even? n) (fast-expt-iter-go (square b) (/ n 2) a))
+   (else (fast-expt-iter-go b (- n 1) (* a b)))))
+
+(define (fast-expt-iter b n)
+  (fast-expt-iter-go b n 1))
